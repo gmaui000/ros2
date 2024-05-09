@@ -1,0 +1,22 @@
+FROM ros:humble-ros-base
+
+RUN sed -i s@ports.ubuntu.com@mirrors.aliyun.com@g /etc/apt/sources.list
+
+RUN apt-get update && \
+         DEBIAN_FRONTEND="noninteractive" \
+         apt-get install -y --no-install-recommends \
+         vim \
+         iputils-ping \
+         ca-certificates \
+         net-tools \
+         ssh \
+         python3-pip libopencv-dev ros-humble-usb-cam ros-humble-desktop ros-humble-foxglove-bridge && \
+         apt-get autoremove -y && \
+         apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+        && echo $TZ > /etc/timezone && \
+        mkdir -p /opt/media/bin/www
+

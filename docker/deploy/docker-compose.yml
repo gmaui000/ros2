@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  ros2:
+    image: gmaui000/ros2
+    stdin_open: true
+    tty: true
+    ipc: host
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=10 
+      - DISPLAY=$DISPLAY
+    devices:
+      - /dev/video0:/dev/video0
+    volumes:
+      - ./start.sh:/tmp/start.sh
+      - ./src:/root/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    command: [ "sh", "-c", "/tmp/start.sh 2>&1" ]
