@@ -1,6 +1,0 @@
-version: '3'
-services:
-  foxglove:
-    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/foxglove
-    ports:
-      - "8080:8080"

@@ -59,12 +59,12 @@ RUN cd /opt && git clone https://github.com/strasdat/Sophus.git \
     && make -j8 && make install
     # && rm -rf Sophus
 
-WORKDIR /root/catkin_ws
+WORKDIR /root/fastlivo2
 # Setup catkin workspace
-# RUN mkdir -p /catkin_ws/src \
-#     && cd /catkin_ws/src \
+# RUN mkdir -p /fastlivo2/src \
+#     && cd /fastlivo2/src \
 #     && git clone https://github.com/xuankuzcr/rpg_vikit.git \
 #     && git clone https://github.com/hku-mars/FAST-LIVO2 \
-#     && cd /catkin_ws \
+#     && cd /fastlivo2 \
 #     && /bin/bash -c "source /opt/ros/noetic/setup.bash; catkin_make" \
-#     && echo "source /catkin_ws/devel/setup.bash" >> /root/.bashrc
+#     && echo "source /fastlivo2/devel/setup.bash" >> /root/.bashrc

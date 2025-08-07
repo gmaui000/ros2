@@ -40,13 +40,13 @@ packagename="fastlivo2"
 
 case $type in
     'build')
-    docker buildx build --platform=$platform --network=host -t $repository/$namespace/$packagename:latest .
+    docker buildx build --platform=$platform --network=host -t $repository/$namespace/$packagename:ros2 .
         ;;
     'push')
         echo "push to dst registry"
         # ali passwd: Cb1314521*
         # docker login crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com --username=gmaui000
-        docker push $repository/$namespace/$packagename:latest
+        docker push $repository/$namespace/$packagename:ros2
         ;;
      *)
         echo "unkonwn type"

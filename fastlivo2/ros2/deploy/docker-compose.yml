@@ -1,7 +1,7 @@
 services:
-  fastlivo2:
-    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/fastlivo2
-    container_name: fastlivo2
+  fastlivo2-ros2:
+    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/fastlivo2:ros2
+    container_name: fastlivo2-ros2
     stdin_open: true
     tty: true
     ipc: host
@@ -17,8 +17,8 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - ./start.sh:/opt/start.sh
-      - ../src:/root/catkin_ws/src
-      - ../dataset:/root/catkin_ws/dataset
+      - ../src:/root/fastlivo2/src
+      - ../../dataset:/root/fastlivo2/dataset
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/tmp/.docker.xauth
     command: [ "bash", "-c", "chmod +x /opt/start.sh && /opt/start.sh" ]

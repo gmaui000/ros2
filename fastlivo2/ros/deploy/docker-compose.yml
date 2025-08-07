@@ -1,0 +1,24 @@
+services:
+  fastlivo2-ros:
+    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/fastlivo2:ros
+    container_name: fastlivo2-ros
+    stdin_open: true
+    tty: true
+    ipc: host
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=10 
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/tmp/.docker.xauth
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    devices:
+      - /dev/video0:/dev/video0
+      - /dev/dri:/dev/dri
+    volumes:
+      - ./start.sh:/opt/start.sh
+      - ../src:/root/fastlivo2/src
+      - ../../dataset:/root/fastlivo2/dataset
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/tmp/.docker.xauth
+    command: [ "bash", "-c", "chmod +x /opt/start.sh && /opt/start.sh" ]

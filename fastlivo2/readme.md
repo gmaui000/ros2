@@ -32,58 +32,38 @@ FAST-LIVO2 是基于ROS的激光-视觉-惯性里程计系统。本仓库提供D
 ./build_docker_images.sh -t push
 
 # 允许Docker访问X11服务
-xhost +local:root
+xhost +SI:localuser:root
 
 # 启动容器
 cd deploy
 docker-compose up -d
 ```
 
-## 详细指南
-
-### 1. 构建选项
-
-| 参数 | 说明 |
-|------|------|
-| `-t build` | 构建Docker镜像 |
-| `-t push` | 推送镜像到仓库 |
-| `--no-cache` | 不使用缓存构建 |
-
-### 2. 图形界面支持
-
-确保主机已安装X11服务，并运行：
-
-```bash
-xhost +local:root
-```
-
-### 3. 访问容器
-
-```bash
-docker exec -it fastlivo2 bash
-```
-
-在容器内启动RViz:
-
-```bash
-rviz
-```
-
 ## 项目结构
 
 ```shell
 fastlivo2/
-├── deploy/            # 部署配置
-│   ├── docker-compose.yml
-│   └── start.sh
-├── dockerfile         # Docker构建文件
+│ 
+├── ros/ # ros on ubuntu-20.04
+│   ├── deploy/            # 部署配置
+│   │   ├── docker-compose.yml
+│   │   └── start.sh
+│   ├── dockerfile         # Docker构建文件
+│ 
+├── ros2/ # ros2 on ubuntu-22.04
+│   ├── deploy/            # 部署配置
+│   │   ├── docker-compose.yml
+│   │   └── start.sh
+│   ├── dockerfile         # Docker构建文件
 └── src/               # 项目源码
 ```
 
 ## 参考
 
-- 原项目: [hku-mars/FAST-LIVO2](https://github.com/hku-mars/FAST-LIVO2)
+- ros原项目: [hku-mars/FAST-LIVO2](https://github.com/hku-mars/FAST-LIVO2)
+- ros2原项目: [xiayip/FAST-LIVO2](https://github.com/xiayip/FAST-LIVO2)
 - ROS文档: [ros.org](https://www.ros.org/)
+- ROS2文档: [docs.ros.org](https://docs.ros.org/en/humble/)
 
 ## 许可证
 

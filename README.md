@@ -18,7 +18,7 @@
 
 - 🖥️ ARM64架构ROS2容器
 - 🔄 x86_64交叉编译支持
-- [详细文档](./reterminal/readme.md) 
+- [详细文档](./reterminal/readme.md)
 
 ### 3. Foxglove
 

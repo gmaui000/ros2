@@ -1,0 +1,79 @@
+FROM ubuntu:22.04
+
+# Set timezone
+ENV TZ=Asia/Shanghai
+ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# Change source
+RUN sed -i s@archive.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+RUN sed -i s@security.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+
+# Setup ROS2 Humble with proper GPG key
+RUN apt update && apt install -y \
+    locales \
+    vim curl \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    software-properties-common \
+    && locale-gen en_US en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+RUN add-apt-repository universe \
+    && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+# Install ROS2
+RUN apt update && apt install -y \
+    ros-humble-desktop \
+    ros-humble-ros-base \
+    ros-dev-tools
+
+# Install build tools and dependencies
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    python3-flake8-docstrings \
+    python3-pip \
+    python3-pytest-cov \
+    python3-flake8-blind-except \
+    python3-flake8-builtins \
+    python3-flake8-class-newline \
+    python3-flake8-comprehensions \
+    python3-flake8-deprecated \
+    python3-flake8-import-order \
+    python3-flake8-quotes \
+    python3-pytest-repeat \
+    python3-pytest-rerunfailures \
+    && pip install rosbags -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PCL, Eigen, OpenCV
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    libpcl-dev \
+    libpcl-ros-dev \
+    libeigen3-dev \
+    libopencv-dev \
+    ros-humble-sophus \
+    ros-humble-image-transport-plugins \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# add proxy
+ENV http_proxy=http://192.168.31.164:7897
+ENV https_proxy=http://192.168.31.164:7897
+
+# Install Livox-SDK2 from source
+RUN mkdir -p /root/livox2/src && cd /root/livox2/src \
+    && git clone https://github.com/Livox-SDK/Livox-SDK2.git \
+    && cd Livox-SDK2/ \
+    && mkdir build && cd build && cmake .. \
+    && make -j && make install
+
+SHELL ["/bin/bash", "-c"]
+RUN cd /root/livox2/src && git clone https://github.com/Livox-SDK/livox_ros_driver2.git \
+    && cd livox_ros_driver2/ \
+    && source /opt/ros/humble/setup.bash && ./build.sh humble
+
+WORKDIR /root/fastlivo2
