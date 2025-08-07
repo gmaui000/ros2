@@ -1,0 +1,70 @@
+FROM ubuntu:20.04
+
+# Set timezone
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# change source
+RUN sed -i s@archive.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+RUN sed -i s@security.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+
+# Setup sources.list and keys for ROS Noetic (using Tsinghua mirror)
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /etc/apt/keyrings/ros-archive-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
+
+# Install ROS Noetic desktop full
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    ros-noetic-desktop-full \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install build tools and dependencies
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    python3-catkin-tools \
+    python3-rosdep \
+    python3-rosinstall \
+    python3-rosinstall-generator \
+    python3-wstool \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PCL, Eigen, OpenCV
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    libpcl-dev \
+    libeigen3-dev \
+    libopencv-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# add proxy
+ENV http_proxy=http://192.168.31.164:7897
+ENV https_proxy=http://192.168.31.164:7897
+
+# Install Sophus from source
+RUN cd /opt && git clone https://github.com/strasdat/Sophus.git \
+    && cd Sophus \
+    && git checkout a621ff \
+    && mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="-std=gnu++03 -Wno-deprecated-declarations" .. \
+    && make -j8 && make install
+    # && rm -rf Sophus
+
+WORKDIR /root/catkin_ws
+# Setup catkin workspace
+# RUN mkdir -p /catkin_ws/src \
+#     && cd /catkin_ws/src \
+#     && git clone https://github.com/xuankuzcr/rpg_vikit.git \
+#     && git clone https://github.com/hku-mars/FAST-LIVO2 \
+#     && cd /catkin_ws \
+#     && /bin/bash -c "source /opt/ros/noetic/setup.bash; catkin_make" \
+#     && echo "source /catkin_ws/devel/setup.bash" >> /root/.bashrc
