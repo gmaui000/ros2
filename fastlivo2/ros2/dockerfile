@@ -57,6 +57,7 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     libopencv-dev \
     ros-humble-sophus \
     ros-humble-image-transport-plugins \
+    ros-humble-foxglove-bridge \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

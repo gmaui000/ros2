@@ -49,7 +49,7 @@ case $type in
         else
             cd lichtblick && git pull
         fi
-        docker buildx build --no-cache --platform=$platform --network=host -t $repository/$namespace/$packagename:latest .
+        docker buildx build --platform=$platform --network=host -t $repository/$namespace/$packagename:latest .
         ;;
     'push')
         echo "push to dst registry"

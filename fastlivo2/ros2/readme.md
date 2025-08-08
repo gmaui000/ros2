@@ -68,9 +68,12 @@ ros2 launch fast_livo mapping_avia.launch.py use_rviz:=True
 ```
 
 ```bash
-# err
 rosbags-convert --src dataset/Bright_Screen_Wall.bag --dst dataset/Bright_Screen_Wall
 ros2 bag play -p dataset/Bright_Screen_Wall
+```
+
+```lichtblick
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml
 ```
 
 ## 许可证

@@ -4,8 +4,9 @@ services:
     container_name: fastlivo2-ros2
     stdin_open: true
     tty: true
-    ipc: host
-    network_mode: host
+    ports:
+      - 9090:9090
+      - 8765:8765
     environment:
       - ROS_DOMAIN_ID=10 
       - DISPLAY=$DISPLAY
