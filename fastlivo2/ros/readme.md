@@ -97,6 +97,13 @@ root@caobing-Lenovo-Legion-R9000K2021H:~/fastlivo2# rostopic list
 
 ```
 
+```bash
+# 将ros1 bag转换为ros2 bag
+rosbags-convert dataset/Retail_Street.bag --dst dataset/Retail_Street
+# 暂不支持将ros1 转换为mcap
+
+```
+
 ## 许可证
 
 MIT License

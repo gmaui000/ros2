@@ -36,6 +36,8 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
+    python3-pip \
+    && pip install rosbags -i https://pypi.tuna.tsinghua.edu.cn/simple \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

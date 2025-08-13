@@ -13,7 +13,9 @@ RUN sed -i s@security.ubuntu.com@mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources
 # Setup ROS2 Humble with proper GPG key
 RUN apt update && apt install -y \
     locales \
-    vim curl \
+    vim \
+    curl \
+    rename \
     gnupg2 \
     lsb-release \
     ca-certificates \
@@ -58,8 +60,11 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     ros-humble-sophus \
     ros-humble-image-transport-plugins \
     ros-humble-foxglove-bridge \
+    ros-humble-rosbag2-storage-mcap \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+ENV PCL_ROOT=/usr
 
 # add proxy
 ENV http_proxy=http://192.168.31.164:7897
@@ -73,8 +78,10 @@ RUN mkdir -p /root/livox2/src && cd /root/livox2/src \
     && make -j && make install
 
 SHELL ["/bin/bash", "-c"]
-RUN cd /root/livox2/src && git clone https://github.com/Livox-SDK/livox_ros_driver2.git \
-    && cd livox_ros_driver2/ \
+RUN cd /root/livox2/src && git clone https://github.com/Livox-SDK/livox_ros_driver2.git livox_ros_driver\
+    && cd livox_ros_driver/ \
+    && find . -depth -exec rename -v 's/livox_ros_driver2/livox_ros_driver/ig' {} + \
+    && grep -ril 'livox_ros_driver2' . | xargs sed -i 's/livox_ros_driver2/livox_ros_driver/gI' \
     && source /opt/ros/humble/setup.bash && ./build.sh humble
 
 WORKDIR /root/fastlivo2
