@@ -56,6 +56,7 @@ docker exec -it fastlivo2-ros2 bash
 
 ```bash
 colcon build --symlink-install --continue-on-error
+# colcon build --symlink-install --continue-on-error --packages-select livox2pc
 source install/setup.bash
 
 ros2 launch fast_livo mapping_avia.launch.py use_rviz:=True
