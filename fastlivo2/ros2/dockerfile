@@ -57,6 +57,7 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     libpcl-ros-dev \
     libeigen3-dev \
     libopencv-dev \
+    protobuf-compiler libprotobuf-dev \
     ros-humble-sophus \
     ros-humble-image-transport-plugins \
     ros-humble-foxglove-bridge \

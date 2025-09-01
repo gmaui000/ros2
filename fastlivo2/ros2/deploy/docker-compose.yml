@@ -6,7 +6,7 @@ services:
     tty: true
     ports:
       - 9090:9090
-      - 8765:8765
+      - 8778:8765
     environment:
       - ROS_DOMAIN_ID=10 
       - DISPLAY=$DISPLAY
