@@ -60,6 +60,19 @@ colcon build --symlink-install --continue-on-error
 source install/setup.bash
 
 ros2 launch fast_livo mapping_avia.launch.py use_rviz:=True
+
+ros2 launch fast_livo mapping_cowa.launch.py use_rviz:=True
+
+ros2 launch fast_lio mapping_cowa.launch.py
+```
+
+```bash
+# 查看话题详情：
+ros2 topic echo /rgb_img --once
+
+# 查看tf 
+ros2 run tf2_ros tf2_echo imu main/lidar
+
 ```
 
 ```bash
@@ -89,8 +102,13 @@ rosbags-convert --src dataset/Retail_Street.bag --dst dataset/Retail_Street_mcap
 ``` -->
 
 ```bash
-rosbags-convert --src dataset/Bright_Screen_Wall.bag --dst dataset/Bright_Screen_Wall
-ros2 bag play -p dataset/Bright_Screen_Wall
+# dataset
+rosbags-convert --src Bright_Screen_Wall.bag --dst Bright_Screen_Wall
+ros2 bag play -p Bright_Screen_Wall
+
+# dataset/14081/
+rosbags-convert --src 14081.bag --dst 14081_ros2
+ros2 bag play 14081_ros2 --qos-profile-overrides-path qos_config.yaml
 ```
 
 [rosbag2 doc](https://github.com/ros2/rosbag2/blob/rolling/README.md#convert)
