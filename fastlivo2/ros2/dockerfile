@@ -57,6 +57,7 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     libpcl-ros-dev \
     libeigen3-dev \
     libopencv-dev \
+    libmimalloc-dev \
     protobuf-compiler libprotobuf-dev \
     ros-humble-sophus \
     ros-humble-image-transport-plugins \
@@ -64,6 +65,10 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     ros-humble-rosbag2-storage-mcap \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Install evo
+RUN pip install -y --force-reinstall numpy==1.24.3 \
+    && pip3 install evo --upgrade --no-binary evo
 
 ENV PCL_ROOT=/usr
 

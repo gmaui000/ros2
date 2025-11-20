@@ -104,11 +104,11 @@ rosbags-convert --src dataset/Retail_Street.bag --dst dataset/Retail_Street_mcap
 ```bash
 # dataset
 rosbags-convert --src Bright_Screen_Wall.bag --dst Bright_Screen_Wall
-ros2 bag play -p Bright_Screen_Wall
+ros2 bag play Bright_Screen_Wall
 
 # dataset/14081/
 rosbags-convert --src 14081.bag --dst 14081_ros2
-ros2 bag play 14081_ros2 --qos-profile-overrides-path qos_config.yaml
+ros2 bag play 14081_ros2 --qos-profile-overrides-path qos_config.yaml --start-offset 125
 ```
 
 [rosbag2 doc](https://github.com/ros2/rosbag2/blob/rolling/README.md#convert)
