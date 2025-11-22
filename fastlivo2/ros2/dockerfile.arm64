@@ -1,0 +1,117 @@
+FROM ubuntu:22.04
+
+# Set timezone
+ENV TZ=Asia/Shanghai
+ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# Change source
+RUN sed -i s@http://.*.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+
+# Setup ROS2 Humble with proper GPG key
+RUN apt update && apt install -y \
+    net-tools iputils-ping \
+    locales \
+    vim \
+    curl \
+    rename \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    software-properties-common \
+    && locale-gen en_US en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+RUN add-apt-repository universe \
+    && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+# Install ROS2
+RUN apt update && apt install -y \
+    ros-humble-desktop \
+    ros-humble-ros-base \
+    ros-dev-tools
+
+# Install build tools and dependencies
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    python3-flake8-docstrings \
+    python3-pip \
+    python3-pytest-cov \
+    python3-flake8-blind-except \
+    python3-flake8-builtins \
+    python3-flake8-class-newline \
+    python3-flake8-comprehensions \
+    python3-flake8-deprecated \
+    python3-flake8-import-order \
+    python3-flake8-quotes \
+    python3-pytest-repeat \
+    python3-pytest-rerunfailures \
+    && pip install rosbags -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PCL, Eigen, OpenCV
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    libpcl-dev \
+    libpcl-ros-dev \
+    libeigen3-dev \
+    libopencv-dev \
+    libmimalloc-dev \
+    protobuf-compiler libprotobuf-dev \
+    ros-humble-sophus \
+    ros-humble-image-transport-plugins \
+    ros-humble-cv-bridge \
+    ros-humble-rosbag2-storage-mcap \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+    # ros-humble-foxglove-bridge \
+
+COPY ./driver/pip.conf /root/.pip/pip.conf
+COPY ./driver/lddc.patch /tmp/lddc.patch
+COPY ./driver/MVS_arm64 /opt/MVS/
+# Copy foxglove bridge files to ROS2 humble directory (incremental copy)
+COPY ./driver/foxglove/ /tmp/foxglove/
+RUN cp -r /tmp/foxglove/* /opt/ros/humble/ && rm -rf /tmp/foxglove
+
+# Install evo
+RUN mkdir -p /root/.pip
+RUN pip install --force-reinstall numpy==1.24.3 \
+    && pip3 install evo --upgrade --no-binary evo
+
+ENV PCL_ROOT=/usr
+
+# add proxy
+ENV http_proxy=http://192.168.31.164:7897
+ENV https_proxy=http://192.168.31.164:7897
+
+# Install Livox-SDK2 from source
+RUN mkdir -p /root/livox2/src && cd /root/livox2/src \
+    && git clone https://github.com/Livox-SDK/Livox-SDK2.git \
+    && cd Livox-SDK2/ \
+    && mkdir build && cd build && cmake .. \
+    && make -j && make install
+
+SHELL ["/bin/bash", "-c"]
+ENV MVCAM_SDK_PATH=/opt/MVS
+ENV MVCAM_SDK_VERSION=4.6.1
+ENV MVCAM_COMMON_RUNENV=/opt/MVS/lib
+ENV MVCAM_GENICAM_CLPROTOCOL=/opt/MVS/lib/CLProtocol
+ENV ALLUSERSPROFILE=/opt/MVS/MVFG
+ENV LD_LIBRARY_PATH=/opt/MVS/lib/64:/opt/MVS/lib/32
+
+RUN cd /root/livox2/src && git clone https://github.com/Livox-SDK/livox_ros_driver2.git livox_ros_driver\
+    && cd livox_ros_driver/ \
+    && find . -depth -exec rename -v 's/livox_ros_driver2/livox_ros_driver/ig' {} + \
+    && grep -ril 'livox_ros_driver2' . | xargs sed -i 's/livox_ros_driver2/livox_ros_driver/gI' \
+    && patch -p1 < /tmp/lddc.patch \
+    && . /opt/ros/humble/setup.bash && ./build.sh humble
+
+WORKDIR /root/fastlivo2
+
+COPY code/ /root/fastlivo2/src/
+RUN . /root/livox2/install/setup.bash && colcon build --symlink-install --continue-on-error
+
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
+    && echo "source /root/livox2/install/setup.bash" >> /root/.bashrc \
+    && echo "source /root/fastlivo2/install/setup.bash" >> /root/.bashrc

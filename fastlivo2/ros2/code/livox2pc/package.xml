@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>livox2pc</name>
+  <version>0.0.0</version>
+  <description>The livox2pc package</description>
+  <maintainer email="gmaui000@163.com">gmaui</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>protobuf</build_depend>
+
+  <depend>livox_ros_driver</depend>
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>rosbag2_cpp</depend>
+  
+  <exec_depend>protobuf</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

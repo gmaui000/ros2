@@ -1,0 +1,11 @@
+{
+  "package_name": "rosidl_adapter_proto",
+  "output_dir": "/root/fastlivo2/src/rosidl_typesupport_protobuf/rosidl_adapter_proto/test",
+  "template_dir": "/root/fastlivo2/src/rosidl_typesupport_protobuf/rosidl_adapter_proto/resource",
+  "idl_tuples": [
+    "/root/fastlivo2/src/rosidl_typesupport_protobuf/rosidl_adapter_proto/test:msg/BoolTest.idl"
+  ],
+  "target_dependencies": [
+    "/root/fastlivo2/src/rosidl_typesupport_protobuf/rosidl_adapter_proto/test/msg/BoolTest.idl"
+  ]
+}

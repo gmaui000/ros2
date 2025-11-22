@@ -132,7 +132,16 @@ output_bags:
 
 ```bash
 #lichtblick
-ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml debug:=true
+```
+
+```bash
+ros2 launch  mvs_ros_driver mvs_camera_trigger.py
+
+ros2 launch livox_ros_driver msg_MID360_launch.py
+
+ros2 launch livox2pc livox2std_launch.py
+
 ```
 
 ## 许可证

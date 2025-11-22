@@ -1,0 +1,159 @@
+/**:
+  ros__parameters:
+    common:                                                  # 通用配置
+      img_topic: "/front/ch1/image"                          # 相机图像话题 14081
+      # img_topic: "/camera3/image"                          # 相机图像话题 pi
+      lid_topic: "/main/ruby/lidar_points"                   # LiDAR 话题
+      imu_topic: "/imu"                                      # IMU 话题
+      img_en: 1                                              # 是否启用相机
+      img_down: 2                                            # 相机话题降采样
+      lidar_en: 1                                            # 是否启用LiDAR
+      ros_driver_bug_fix: false                              # 是否启用ROS驱动Bug 修复
+      real_camera_init_en: 1                                 # 是否将camera_init映射到真实空间中
+
+    extrin_calib:                                            # 外参标定参数
+      # base_link 到 IMU 的外参
+      extrinsic_T_I2B: [   0.467101, 9.83622e-05,     1.22905 ]      # 传感器的平移变换（单位：米）
+      extrinsic_R_I2B: [ -0.0201476,    0.999795, -0.00219014,
+                           0.999784,   0.0201586,  0.00514963,
+                         0.00519272, -0.00208592,   -0.999984 ]      # 传感器的旋转变换 （单位： 四元数或者旋转矩阵）
+      # lidar 到IMU的外参
+# 14081
+# ros2 run tf2_ros tf2_echo main/lidar imu
+# At time 1755927071.590101503
+# - Translation: [0.037, -0.000, -0.121]
+# - Rotation: in Quaternion (xyzw) [0.694, 0.720, -0.003, -0.002]
+# - Rotation: in RPY (radian) [-3.135, 0.001, 1.608]
+# - Rotation: in RPY (degree) [-179.634, 0.035, 92.116]
+# - Matrix:
+#  -0.037  0.999 -0.006  0.037
+#   0.999  0.037 -0.001 -0.000
+#  -0.001 -0.006 -1.000 -0.121
+#   0.000  0.000  0.000  1.000
+      extrinsic_T: [  0.037, -0.000, -0.121 ]               # 传感器的平移变换（单位：米）
+      extrinsic_R: [ -0.037,  0.999, -0.006,
+                      0.999,  0.037, -0.001,
+                     -0.001, -0.006, -1.000]                # 传感器的旋转变换 （单位： 四元数或者旋转矩阵）
+
+# pi
+# At time 1716012747.290070527
+# - Translation: [0.001, -0.036, -0.131]
+# - Rotation: in Quaternion (xyzw) [0.697, 0.717, 0.002, -0.001]
+# - Rotation: in RPY (radian) [3.139, -0.004, 1.598]
+# - Rotation: in RPY (degree) [179.873, -0.209, 91.549]
+# - Matrix:
+#  -0.027  1.000  0.002  0.001
+#   1.000  0.027  0.004 -0.036
+#   0.004  0.002 -1.000 -0.131
+#   0.000  0.000  0.000  1.000
+# At time 1716012748.290063359
+      # extrinsic_T: [  0.001, -0.036, -0.131 ]               # 传感器的平移变换（单位：米）
+      # extrinsic_R: [ -0.027,  1.000,  0.002,
+      #                 1.000,  0.027,  0.004,
+      #                 0.004,  0.002, -1.000 ]               # 传感器的旋转变换 （单位： 四元数或者旋转矩阵）
+
+# 14081
+# ros2 run tf2_ros tf2_echo main/lidar front/ch1/stereo
+# At time 1755927163.790148863
+# - Translation: [0.895, 0.198, -0.512]
+# - Rotation: in Quaternion (xyzw) [-0.499, 0.508, -0.497, 0.496]
+# - Rotation: in RPY (radian) [-1.584, 0.007, -1.580]
+# - Rotation: in RPY (degree) [-90.763, 0.411, -90.551]
+# - Matrix:
+#  -0.010 -0.013  1.000  0.895
+#  -1.000  0.007 -0.010  0.198
+#  -0.007 -1.000 -0.013 -0.512
+#   0.000  0.000  0.000  1.000
+      Rcl: [ -0.010, -0.013,  1.000,
+             -1.000,  0.007, -0.010,
+             -0.007, -1.000, -0.013 ]                        # LiDAR到相机的旋转矩阵
+      Pcl: [  0.895,  0.198, -0.512 ]                        # LiDAR到相机的平移矩阵（单位：米）
+
+# pi
+# ros2 run tf2_ros tf2_echo main/lidar camera3
+# At time 1716012746.290044671
+# - Translation: [0.059, 0.005, -0.107]
+# - Rotation: in Quaternion (xyzw) [0.501, -0.493, 0.507, -0.499]
+# - Rotation: in RPY (radian) [-1.559, -0.017, -1.571]
+# - Rotation: in RPY (degree) [-89.337, -0.959, -89.986]
+# - Matrix:
+#   0.000  0.012  1.000  0.059
+#  -1.000 -0.017  0.000  0.005
+#   0.017 -1.000  0.012 -0.107
+#   0.000  0.000  0.000  1.000
+
+      # Rcl: [  0.000,  0.012,  1.000,
+      #        -1.000, -0.017, -0.000,
+      #         0.017, -1.000,  0.012 ]                        # LiDAR到相机的旋转矩阵
+      # Pcl: [  0.059,  0.005, -0.107 ]                        # LiDAR到相机的平移矩阵（单位：米）
+
+    time_offset:                                             # 传感器时间同步参数
+      imu_time_offset: 0.0                                   # IMU 时间偏移（单位：秒）
+      img_time_offset: 0.0                                   # 相机 时间偏移（单位：秒）
+      exposure_time_init: 0.0                                # 初始曝光时间 （单位：秒）
+
+    preprocess:                                              # 预处理参数
+      point_filter_num: 5                                    # 点云滤波采样间隔
+      max_points_num: 24000                                  # 最大点云数量
+      filter_size_surf: 0.1                                  # 表面滤波尺寸（单位：米）
+      lidar_type: 7                                          # LiDAR 类型 Livox Avia LiDAR  HELIOS
+      scan_line: 32                                          # 扫描线数量（Avia：6， Mid360：4, helios: 32, r: 128）
+      blind: 0.8                                             # LiDAR盲区范围（单位：米）
+
+    vio:                                                     # 视觉惯性里程计（VIO） 参数
+      max_iterations: 5                                      # 最大迭代次数
+      outlier_threshold: 1000                                # 离群点阈值 78 100 156 #100 200 500 700 infinite
+      img_point_cov: 100                                     # 图像特征点协方差 100 1000 
+      patch_size: 8                                          # 视觉特征块大小
+      patch_pyrimid_level: 4                                 # 视觉金字塔层级数
+      normal_en: true                                        # 是否启用法向量计算
+      raycast_en: false                                      # 是否启用光线投射
+      inverse_composition_en: false                          # 是否使用逆组合方法
+      exposure_estimate_en: true                             # 是否启用曝光时间估计
+      inv_expo_cov: 0.1                                      # 曝光时间估计协方差
+
+    imu:                                                     # IMU相关参数
+      imu_en: true                                           # 是否启用
+      imu_int_frame: 30                                      # IMU插值帧数
+      acc_cov: 0.1                                           # 加速度计噪声协方差 0.2
+      gyr_cov: 0.1                                           # 陀螺仪噪声协方差 0.5
+      b_acc_cov: 0.0001                                      # 加速度偏差噪声协方差 0.1
+      b_gyr_cov: 0.0001                                      # 陀螺仪偏差噪声协方差 0.1
+
+    lio:                                                     # 激光惯性里程计（LIO） 参数
+      max_iterations: 5                                      # 最大迭代次数
+      dept_err: 0.02                                         # 深度误差（单位：米）
+      beam_err: 0.05                                         # 光速误差（单位：米）
+      min_eigen_value: 0.0025                                # 最小特征值 0.005
+      voxel_size: 0.5                                        # 体素滤波尺寸（单位：米）
+      max_layer: 2                                           # 最大层数
+      max_points_num: 50                                     # 最大点数
+      layer_init_num: [5, 5, 5, 5, 5]                        # 各层初始化点数
+
+    local_map:                                               # 局部地图参数
+      map_sliding_en: false                                  # 是否启用滑动窗口地图
+      half_map_size: 100                                     # 地图窗口半径（单位：米）
+      sliding_thresh: 8.0                                    # 地图滑动阈值（单位：米）
+
+    uav:                                                     # 无人机相关参数
+      imu_rate_odom: false                                   # 是否根据IMU频率发布里程计数据
+      gravity_align_en: false                                # 是否启用重力对齐
+
+    publish:                                                 # 话题发布相关开关
+      dense_map_en: true                                     # 是否发布精密点云地图
+      pub_effect_point_en: true                              # 是否发布有效点云
+      pub_plane_en: false                                    # 是否发布平面点云
+      pub_scan_num: 1                                        # 需要发布的扫描次数
+      blind_rgb_points: 0.0                                  # RGB 盲区点云
+
+    evo:                                                     # 轨迹评估相关参数
+      seq_name: "CBD_Building_01"                            # 轨迹数据集名称
+      pose_output_en: false                                  # 是否输出位姿数据
+
+    pcd_save:                                                # 点云数据保存参数
+      pcd_save_en: false                                     # 是否启用点云保存
+      colmap_output_en: false                                # 是否输出至 COLMAP need to set interval = -1
+      filter_size_pcd: 0.15                                  # 点云滤波尺寸（单位：米）
+      interval: -1                                           # 点云保存间隔（-1 表示所有帧保存到一个PCD问价，可能导致内存溢出）
+      # how many LiDAR frames saved in each pcd file;
+      # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.

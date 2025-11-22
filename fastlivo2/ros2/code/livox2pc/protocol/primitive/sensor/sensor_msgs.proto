@@ -1,0 +1,73 @@
+syntax = "proto3";
+package asp_sensor;
+
+import "primitive/sensor/std_msgs.proto";
+import "primitive/sensor/geometry_msgs.proto";
+
+message ChannelFloat32 {
+  string name = 1;
+  repeated float values = 2;
+}
+
+message PointCloud {
+  Header header = 1;
+  repeated Point32 points = 2;
+  repeated ChannelFloat32 channels = 3;
+}
+
+message PointField {
+  enum PointType {
+    NONE = 0;
+    INT8 = 1;
+    UINT8 = 2;
+    INT16 = 3;
+    UINT16 = 4;
+    INT32 = 5;
+    UINT32 = 6;
+    FLOAT32 = 7;
+    FLOAT64 = 8;
+  }
+
+  string name = 1;
+  uint32 offset = 2;
+  PointType datatype = 3;
+  uint32 count = 4;
+}
+
+message PointCloud2 {
+  Header header = 1;
+  uint32 height = 2;
+  uint32 width = 3;
+  repeated PointField fields = 4;
+  bool is_bigendian = 5;
+  uint32 point_step = 6;
+  uint32 row_step = 7;
+  bytes data = 8;
+  bool is_dense = 9;
+}
+
+message Imu {
+  Header header = 1;
+  Quaternion orientation = 2;
+  Point64 angular = 3;
+  Point64 acceleration = 4;
+  repeated double orientation_covariance = 5;
+  repeated double angular_covariance = 6;
+  repeated double acceleration_covariance = 7;
+  
+  enum State {
+    OK = 0;
+    LOST_BOTH = 1;
+    LOST_A = 2;
+    LOST_B = 3;
+    TEMP_HIGH = 4;
+    TIMEOUT = 5;
+  };
+  State status = 8;
+
+  uint32 sequence = 9;
+  int32 latency_ms = 10;
+  float temperature = 11;
+  bytes model = 12;
+  repeated float intrinsics = 13;
+}
