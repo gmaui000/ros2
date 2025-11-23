@@ -1,6 +1,6 @@
 services:
   fastlivo2-ros2:
-    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/fastlivo2:ros2
+    image: crpi-6ty60rr45g7d9i1q.cn-shanghai.personal.cr.aliyuncs.com/voyance/fastlivo2_amd64:ros2
     container_name: fastlivo2-ros2
     stdin_open: true
     tty: true

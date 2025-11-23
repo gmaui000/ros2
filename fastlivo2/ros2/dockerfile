@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
 
 # Change source
-RUN sed -i s@http://.*.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g /etc/apt/sources.list
+RUN sed -i 's@http://.*.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g' /etc/apt/sources.list
 
 # Setup ROS2 Humble with proper GPG key
 RUN apt update && apt install -y \
