@@ -28,31 +28,31 @@ RUN add-apt-repository universe \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # Install ROS2
-RUN apt update && apt install -y \
+RUN apt update && apt install -y --no-install-recommends \
     ros-humble-desktop \
     ros-humble-ros-base \
     ros-dev-tools
 
-# Install build tools and dependencies
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-    python3-flake8-docstrings \
-    python3-pip \
-    python3-pytest-cov \
-    python3-flake8-blind-except \
-    python3-flake8-builtins \
-    python3-flake8-class-newline \
-    python3-flake8-comprehensions \
-    python3-flake8-deprecated \
-    python3-flake8-import-order \
-    python3-flake8-quotes \
-    python3-pytest-repeat \
-    python3-pytest-rerunfailures \
-    && pip install rosbags -i https://pypi.tuna.tsinghua.edu.cn/simple \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# # Install build tools and dependencies
+# RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+#     python3-flake8-docstrings \
+#     python3-pip \
+#     python3-pytest-cov \
+#     python3-flake8-blind-except \
+#     python3-flake8-builtins \
+#     python3-flake8-class-newline \
+#     python3-flake8-comprehensions \
+#     python3-flake8-deprecated \
+#     python3-flake8-import-order \
+#     python3-flake8-quotes \
+#     python3-pytest-repeat \
+#     python3-pytest-rerunfailures \
+#     && pip install rosbags -i https://pypi.tuna.tsinghua.edu.cn/simple \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Install PCL, Eigen, OpenCV
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
     libpcl-dev \
     libpcl-ros-dev \
     libeigen3-dev \
@@ -63,21 +63,24 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     ros-humble-image-transport-plugins \
     ros-humble-cv-bridge \
     ros-humble-rosbag2-storage-mcap \
+    ros-humble-rosidl-adapter \
+    ros-humble-builtin-interfaces \
+    ros-humble-rosidl-default-generators \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     # ros-humble-foxglove-bridge \
 
-COPY ./driver/pip.conf /root/.pip/pip.conf
+# COPY ./driver/pip.conf /root/.pip/pip.conf
 COPY ./driver/lddc.patch /tmp/lddc.patch
 COPY ./driver/MVS/ /opt/MVS/
 # Copy foxglove bridge files to ROS2 humble directory (incremental copy)
 COPY ./driver/foxglove/ /tmp/foxglove/
 RUN cp -r /tmp/foxglove/* /opt/ros/humble/ && rm -rf /tmp/foxglove
 
-# Install evo
-RUN mkdir -p /root/.pip
-RUN pip install --force-reinstall numpy==1.24.3 \
-    && pip3 install evo --upgrade --no-binary evo
+# # Install evo
+# RUN mkdir -p /root/.pip
+# RUN pip install --force-reinstall numpy==1.24.3 \
+#     && pip3 install evo --upgrade --no-binary evo
 
 ENV PCL_ROOT=/usr
 
