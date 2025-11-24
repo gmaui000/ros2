@@ -74,7 +74,7 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-i
 COPY ./driver/lddc.patch /tmp/lddc.patch
 COPY ./driver/MVS_arm64/ /opt/MVS/
 # Copy foxglove bridge files to ROS2 humble directory (incremental copy)
-COPY ./driver/foxglove/ /tmp/foxglove/
+COPY ./driver/foxglove_arm64/ /tmp/foxglove/
 RUN cp -r /tmp/foxglove/* /opt/ros/humble/ && rm -rf /tmp/foxglove
 
 # # Install evo

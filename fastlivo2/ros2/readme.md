@@ -144,6 +144,45 @@ ros2 launch livox2pc livox2std_launch.py
 
 ```
 
+# run on RK3588
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y ca-certificates curl gnupg lsb-release
+
+sudo mkdir -p /etc/apt/trusted.gpg.d
+curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/docker.gpg] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/ $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+
+sudo usermod -aG docker $USER
+newgrp docker
+
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": [
+    "https://hub-mirror.c.163.com",
+    "https://mirror.aliyuncs.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+EOF
+
+sudo systemctl restart docker
+docker run --rm hello-world
+docker run -it --rm ubuntu:22.04
+
+docker run -d -p 80:80 --name nginx-test nginx:alpine
+
+```
+
 ## 许可证
 
 MIT License
