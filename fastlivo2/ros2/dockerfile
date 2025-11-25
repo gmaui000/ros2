@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+ARG TARGETARCH
+
 # Set timezone
 ENV TZ=Asia/Shanghai
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
@@ -66,15 +68,16 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-i
     ros-humble-rosidl-adapter \
     ros-humble-builtin-interfaces \
     ros-humble-rosidl-default-generators \
+    ros-humble-camera-calibration \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
     # ros-humble-foxglove-bridge \
 
 # COPY ./driver/pip.conf /root/.pip/pip.conf
 COPY ./driver/lddc.patch /tmp/lddc.patch
-COPY ./driver/MVS/ /opt/MVS/
-# Copy foxglove bridge files to ROS2 humble directory (incremental copy)
-COPY ./driver/foxglove/ /tmp/foxglove/
+COPY ./driver/MVS_${TARGETARCH:-amd64}/ /opt/MVS/
+COPY ./driver/foxglove_${TARGETARCH:-amd64}/ /tmp/foxglove/
+
 RUN cp -r /tmp/foxglove/* /opt/ros/humble/ && rm -rf /tmp/foxglove
 
 # # Install evo
