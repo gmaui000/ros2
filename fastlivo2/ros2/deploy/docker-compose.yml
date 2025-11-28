@@ -20,9 +20,9 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - ./start.sh:/opt/start.sh
-        #- ../src:/root/fastlivo2/src
+      #- ../src:/root/fastlivo2/src
       - ../../dataset:/root/fastlivo2/dataset
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/tmp/.docker.xauth
-      - /opt/MVS:/opt/MVS
+      #- /opt/MVS:/opt/MVS
     command: [ "bash", "-c", "chmod +x /opt/start.sh && /opt/start.sh" ]

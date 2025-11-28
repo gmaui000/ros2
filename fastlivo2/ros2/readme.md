@@ -183,6 +183,16 @@ docker run -d -p 80:80 --name nginx-test nginx:alpine
 
 ```
 
+
+# 标定
+
+```bash
+ros2 launch  mvs_ros_driver mvs_camera_trigger.py
+
+# 12 x 9 黑白格，单个格子宽度5cm
+ros2 run camera_calibration cameracalibrator --ros-args -p size:=11x8 -p square:=0.050 -r image:=/left_camera/image
+```
+
 ## 许可证
 
 MIT License
