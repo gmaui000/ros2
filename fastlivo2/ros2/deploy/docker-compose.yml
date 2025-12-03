@@ -26,3 +26,11 @@ services:
       - $HOME/.Xauthority:/tmp/.docker.xauth
       #- /opt/MVS:/opt/MVS
     command: [ "bash", "-c", "chmod +x /opt/start.sh && /opt/start.sh" ]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: ""
+              count: all
+              capabilities: [gpu]
+              options: {}

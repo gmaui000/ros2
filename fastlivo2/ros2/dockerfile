@@ -73,7 +73,13 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-i
     && rm -rf /var/lib/apt/lists/*
     # ros-humble-foxglove-bridge \
 
-# COPY ./driver/pip.conf /root/.pip/pip.conf
+RUN apt update && apt install -y --no-install-recommends \
+    libomp-dev libglm-dev libglfw3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /root/.pip
+COPY ./driver/pip.conf /root/.pip/pip.conf
 COPY ./driver/lddc.patch /tmp/lddc.patch
 COPY ./driver/MVS_${TARGETARCH:-amd64}/ /opt/MVS/
 COPY ./driver/foxglove_${TARGETARCH:-amd64}/ /tmp/foxglove/
@@ -81,7 +87,7 @@ COPY ./driver/foxglove_${TARGETARCH:-amd64}/ /tmp/foxglove/
 RUN cp -r /tmp/foxglove/* /opt/ros/humble/ && rm -rf /tmp/foxglove
 
 # # Install evo
-# RUN mkdir -p /root/.pip
+
 # RUN pip install --force-reinstall numpy==1.24.3 \
 #     && pip3 install evo --upgrade --no-binary evo
 

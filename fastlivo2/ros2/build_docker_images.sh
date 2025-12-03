@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-while getopts t:p: opt
+while getopts t:p:f opt
 do
     case $opt in
         t)
@@ -8,6 +8,9 @@ do
             ;;
         p)
             platform=$OPTARG
+            ;;
+        f)
+            option="--no-cache"
             ;;
         ?)
             echo "unkonwn"
@@ -43,7 +46,7 @@ packagename="fastlivo2"_$platform
 
 case $type in
     'build')
-        docker buildx build --platform="linux/"$platform --network=host -t $repository/$namespace/$packagename:ros2 .
+        docker buildx build $option --platform="linux/"$platform --network=host -t $repository/$namespace/$packagename:ros2 .
         ;;
     'push')
         echo "push to dst registry"
