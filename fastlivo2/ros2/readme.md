@@ -147,6 +147,11 @@ ros2 launch livox2pc livox2std_launch.py
 # run on RK3588
 
 ```bash
+adb shell
+
+```
+
+```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y ca-certificates curl gnupg lsb-release
 
@@ -209,7 +214,9 @@ ros2 launch  mvs_ros_driver mvs_camera_trigger.py
 ros2 launch livox_ros_driver msg_MID360_launch.py
 ros2 launch livox2pc livox2std_launch.py
 
-ros2 launch fast_lio mapping_cowa.launch.py
+ros2 launch fast_livo mapping_mid360.launch.py use_rviz:=True image_convert:=True
+
+
 ```
 
 ## 许可证

@@ -26,6 +26,13 @@ def generate_launch_description():
         description="Whether to launch Rviz2",
     )
 
+    # Param image_convert
+    image_convert_arg = DeclareLaunchArgument(
+        "image_convert",
+        default_value="False",
+        description="Whether to enable image republish node",
+    )
+
     avia_config_arg = DeclareLaunchArgument(
         'avia_params_file',
         default_value=avia_config_cmd,
@@ -47,9 +54,11 @@ def generate_launch_description():
     avia_params_file = LaunchConfiguration('avia_params_file')
     camera_params_file = LaunchConfiguration('camera_params_file')
     use_respawn = LaunchConfiguration('use_respawn')
+    image_convert = LaunchConfiguration('image_convert')
 
     return LaunchDescription([
         use_rviz_arg,
+        image_convert_arg,
         avia_config_arg,
         camera_config_arg,
         use_respawn_arg,
@@ -64,6 +73,7 @@ def generate_launch_description():
         # https://robotics.stackexchange.com/questions/110939/how-do-i-remap-compressed-video-to-raw-video-in-ros2
         # ros2 run image_transport republish compressed raw --ros-args --remap in/compressed:=/left_camera/image/compressed --remap out:=/left_camera/image
         Node(
+            condition=IfCondition(image_convert),
             package="image_transport",
             executable="republish",
             name="republish",
