@@ -50,7 +50,7 @@
 
     imu:                                                     # IMU相关参数
       imu_en: true                                           # 是否启用
-      imu_int_frame: 30                                      # IMU插值帧数
+      imu_int_frame: 100                                     # IMU初始化帧数
       acc_cov: 0.5                                           # 加速度计噪声协方差 0.2
       gyr_cov: 0.3                                           # 陀螺仪噪声协方差 0.5
       b_acc_cov: 0.0001                                      # 加速度偏差噪声协方差 0.1
@@ -67,7 +67,7 @@
       layer_init_num: [5, 5, 5, 5, 5]                        # 各层初始化点数
 
     local_map:                                               # 局部地图参数
-      map_sliding_en: false                                  # 是否启用滑动窗口地图
+      map_sliding_en: true                                   # 是否启用滑动窗口地图
       half_map_size: 100                                     # 地图窗口半径（单位：米）
       sliding_thresh: 8.0                                    # 地图滑动阈值（单位：米）
 
@@ -76,10 +76,10 @@
       gravity_align_en: true                                 # 是否启用重力对齐
 
     publish:                                                 # 话题发布相关开关
-      dense_map_en: true                                     # 是否发布精密点云地图
+      dense_map_en: false                                    # 是否发布精密点云地图
       pub_effect_point_en: true                              # 是否发布有效点云
-      pub_plane_en: false                                     # 是否发布平面点云
-      pub_scan_num: 1                                        # 需要发布的扫描次数
+      pub_plane_en: false                                    # 是否发布平面点云
+      pub_scan_num: 5                                        # 需要发布的扫描间隔次数
       blind_rgb_points: 0.0                                  # RGB 盲区点云
 
     evo:                                                     # 轨迹评估相关参数

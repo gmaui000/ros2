@@ -188,34 +188,47 @@ docker run -d -p 80:80 --name nginx-test nginx:alpine
 
 ```
 
-
 # 标定
 
 ```bash
-ros2 launch  mvs_ros_driver mvs_camera_trigger.py
-
-# 12 x 9 黑白格，单个格子宽度5cm
+# 内参
+ros2 launch mvs_ros_driver   mvs_camera_trigger.py
+  ## 12 x 9 黑白格，单个格子宽度5cm
 ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.050 image:=/left_camera/image
 
 docker cp fastlivo2-ros2:/tmp/calibrationdata.tar.gz .
 
 #ros2 topic pub -r 10 /camera_info sensor_msgs/msg/CameraInfo "{height: 512, width: 640, k: [639.1123,0,337.3092,0,638.7531,250.5352,0,0,1], d: [-0.061406,0.06985,0.001111,0.001739,0], r: [1,0,0,0,1,0,0,0,1], p: [630.8092,0,337.8753,0,0,632.3165,250.3365,0,0,0,1,0], distortion_model: 'plumb_bob'}"
 
+# 外参
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=localhost max_qos_depth:=1 num_threads:=6 send_buffer_limit:=2000000 debug:=true
+ros2 launch livox_ros_driver msg_MID360_launch.py
+ros2 launch livox2pc livox2std_launch.py
+ros2 launch mvs_ros_driver   mvs_camera_trigger.py
+
 ros2 topic pub -r 10 /camera_info sensor_msgs/msg/CameraInfo "{header: {frame_id: '/left_camera/image'}, height: 512, width: 640, distortion_model: 'plumb_bob', d: [-0.064706, 0.086212, 0.000207, 0.000288, 0.0], k: [639.470092, 0.0, 332.613927, 0.0, 638.908881, 247.858794, 0.0, 0.0, 1.0], r: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0], p: [631.488159, 0.0, 332.371498, 0.0, 0.0, 632.378540, 247.341559, 0.0, 0.0, 0.0, 1.0, 0.0]}" 
 
+timeout 30 ros2 bag record /left_camera/image /livox/imu /livox2pc/lidar
+
+  ## direct标定
+  # 这个只需要将录制的ros2 bag包放在一个livox目录下，同级创建一个livox_preprocessed
+  bash ros2_run.sh
 
 ```
 
 # 自启动
 
 ```bash
-ros2 launch foxglove_bridge foxglove_bridge_launch.xml debug:=true
-ros2 launch  mvs_ros_driver mvs_camera_trigger.py
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=localhost max_qos_depth:=1 num_threads:=6 send_buffer_limit:=2000000 debug:=true
 ros2 launch livox_ros_driver msg_MID360_launch.py
-ros2 launch livox2pc livox2std_launch.py
+ros2 launch mvs_ros_driver mvs_camera_trigger.py
 
-ros2 launch fast_livo mapping_mid360.launch.py use_rviz:=True image_convert:=True
+ros2 launch fast_livo mapping_mid360.launch.py #use_rviz:=True image_convert:=True
 
+# docker exec -it fastlivo2-ros2 bash -ic "ros2 launch fast_livo mapping_mid360.launch.py use_rviz:=True"
+# ros2 launch foxglove_bridge foxglove_bridge_launch.xml topic_whitelist:=['/cloud_registered,/path,/rgb_img/compressed,/tf,/tf_static']
+
+ros2 bag record /left_camera/image/compressed /left_camera/image /livox/imu /livox/lidar /cloud_registered /path
 
 ```
 

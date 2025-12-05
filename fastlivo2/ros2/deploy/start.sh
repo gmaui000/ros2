@@ -8,10 +8,10 @@ sleep 10
 ros2 launch foxglove_bridge foxglove_bridge_launch.xml debug:=true &
 sleep 1
 
-ros2 launch  mvs_ros_driver mvs_camera_trigger.py &
+ros2 launch livox_ros_driver msg_MID360_launch.py &
 sleep 1
 
-ros2 launch livox_ros_driver msg_MID360_launch.py &
+ros2 launch  mvs_ros_driver mvs_camera_trigger.py &
 sleep 1
 
 ros2 launch livox2pc livox2std_launch.py &
