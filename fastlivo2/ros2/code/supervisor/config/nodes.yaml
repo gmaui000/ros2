@@ -1,0 +1,63 @@
+# Supervisor node configuration
+# This file defines the nodes that can be managed by the supervisor
+
+# Default nodes configuration
+nodes:
+  fast_livo:
+    enabled: false
+    launch_command: ["ros2", "launch", "fast_livo", "mapping_mid360.launch.py"]
+    description: "FAST-LIVO SLAM node"
+    restart_on_failure: true
+    health_check:
+      type: "topic"
+      topic: "/fast_livo/odometry"
+      timeout: 5.0
+    
+  foxglove:
+    enabled: true
+    launch_command: ["ros2", "launch", "foxglove_bridge", "foxglove_bridge_launch.xml"]
+    args: ["address:=localhost", "max_qos_depth:=1", "send_buffer_limit:=2000000", "debug:=true"]
+    description: "Foxglove Bridge for visualization"
+    restart_on_failure: true
+    
+  livox:
+    enabled: false
+    launch_command: ["ros2", "launch", "livox_ros_driver", "msg_MID360_launch.py"]
+    description: "Livox LiDAR driver"
+    restart_on_failure: true
+    
+  mvs:
+    enabled: false
+    launch_command: ["ros2", "launch", "mvs_ros_driver", "mvs_camera_trigger.py"]
+    description: "MVS camera driver"
+    restart_on_failure: true
+    
+  calibration:
+    enabled: false
+    launch_command: ["ros2", "run", "calibration_pkg", "calib_node"]
+    description: "Calibration node"
+    restart_on_failure: false
+
+# Recording configuration
+recording:
+  default_topics:
+    - "/livox/imu"
+    - "/livox/lidar"
+    - "/left_camera/image"
+  default_duration: 180  # seconds (5 minutes)
+  storage_path: "/root/fastlivo2/dataset/rosbags"
+
+# Supervisor settings
+supervisor:
+  status_publish_interval: 1.0  # seconds
+  process_monitor_interval: 5.0  # seconds
+  health_check_interval: 10.0  # seconds
+  max_restart_attempts: 3
+  restart_delay: 2.0  # seconds between restart attempts
+  
+# Security settings
+security:
+  require_auth_token: false
+  allowed_tokens: []
+  # To enable token authentication, set require_auth_token to true
+  # and add tokens to allowed_tokens list

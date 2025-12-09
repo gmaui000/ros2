@@ -127,3 +127,6 @@ RUN . /root/livox2/install/setup.bash && colcon build --symlink-install --contin
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
     && echo "source /root/livox2/install/setup.bash" >> /root/.bashrc \
     && echo "source /root/fastlivo2/install/setup.bash" >> /root/.bashrc
+
+ENV http_proxy=
+ENV https_proxy=

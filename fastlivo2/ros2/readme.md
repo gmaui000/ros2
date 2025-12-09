@@ -180,11 +180,70 @@ sudo tee /etc/docker/daemon.json <<-'EOF'
 }
 EOF
 
+sudo tee  /etc/netplan/00-static-network.yaml <<-'EOF'
+  version: 2
+  renderer: NetworkManager
+
+  ethernets:
+    eth1:
+      dhcp4: true
+      dhcp6: false
+      optional: true
+
+    eth0:
+      dhcp4: false
+      dhcp6: false
+      addresses:
+        - 192.168.1.100/24
+      optional: true
+EOF
+
+sudo tee /etc/default/cpufrequtils <<-'EOF'
+GOVERNOR="performance"
+EOF
+
+sudo timedatectl set-timezone Asia/Shanghai
+
+
 sudo systemctl restart docker
 docker run --rm hello-world
 docker run -it --rm ubuntu:22.04
 
 docker run -d -p 80:80 --name nginx-test nginx:alpine
+
+ip route show dev wwan0
+sudo ip route del default dev wwan0 2>/dev/null
+sudo ip route add default via 100.89.73.8 dev wwan0 metric 200
+
+/usr/share/udhcpc/default_quectel-CM.script
+~~~bash
+for i in $router ; do
+    if [ "$interface" = "wwan0" ]; then
+        echo "Setting metric 200 for WWAN default route..."
+        ip route replace default via $i dev $interface metric 200
+    else
+        ip route add default via $i dev $interface 2>/dev/null || true
+    fi
+do
+#for i in $router ; do
+#	route add default gw $i dev $interface
+#done
+~~~
+
+echo "alias pubip=\"curl -s --noproxy '*' https://ipinfo.io/json | jq -r '.ip'\"" >> ~/.bashrc
+
+sudo tee ~/.config/autostart/ip_monitor.desktop <<-'EOF'
+[Desktop Entry]
+Name=IP Monitor
+Exec=/home/firefly/.bin/ip_monitor start
+Type=Application
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+/usr/share/applications/chromium.desktop
+Exec=chromium --password-store=basic %U
 
 ```
 
@@ -227,6 +286,8 @@ ros2 launch fast_livo mapping_mid360.launch.py #use_rviz:=True image_convert:=Tr
 
 # docker exec -it fastlivo2-ros2 bash -ic "ros2 launch fast_livo mapping_mid360.launch.py use_rviz:=True"
 # ros2 launch foxglove_bridge foxglove_bridge_launch.xml topic_whitelist:=['/cloud_registered,/path,/rgb_img/compressed,/tf,/tf_static']
+
+ros2 bag record /left_camera/image/compressed /livox/imu /livox/lidar
 
 ros2 bag record /left_camera/image/compressed /left_camera/image /livox/imu /livox/lidar /cloud_registered /path
 
