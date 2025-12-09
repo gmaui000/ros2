@@ -49,7 +49,9 @@ recording:
   default_topics:
     - "/livox/imu"
     - "/livox/lidar"
+    - "/livox/points"
     - "/left_camera/image"
+    - "/camera_info"
   default_duration: 180  # seconds (5 minutes)
   storage_path: "/root/fastlivo2/dataset/rosbags"
 
