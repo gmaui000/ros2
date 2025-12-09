@@ -37,6 +37,12 @@ nodes:
     launch_command: ["ros2", "run", "calibration_pkg", "calib_node"]
     description: "Calibration node"
     restart_on_failure: false
+    
+  livox2pc:
+    enabled: false
+    launch_command: ["ros2", "launch", "livox2pc", "livox2std_launch.py"]
+    description: "Livox to PointCloud converter"
+    restart_on_failure: true
 
 # Recording configuration
 recording:

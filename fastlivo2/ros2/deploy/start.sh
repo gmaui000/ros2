@@ -18,6 +18,7 @@ ALL_NODES["livox"]="ros2 launch livox_ros_driver msg_MID360_launch.py"
 ALL_NODES["mvs"]="ros2 launch mvs_ros_driver mvs_camera_trigger.py"
 ALL_NODES["fast_livo"]="ros2 launch fast_livo mapping_mid360.launch.py"
 ALL_NODES["supervisor"]="ros2 launch supervisor supervisor.launch.py"
+# ALL_NODES["supervisor"]="ros2 launch supervisor supervisor.launch.py livox_enabled:=true mvs_enabled:=true fast_livo_enabled:=true"
 
 # 定义启动级别配置（级别 -> 节点列表，用空格分隔）
 # 级别说明：
@@ -29,7 +30,7 @@ declare -A LEVEL_CONFIG
 LEVEL_CONFIG["0"]=""  # 空列表，不启动任何节点
 LEVEL_CONFIG["1"]="supervisor"
 LEVEL_CONFIG["2"]="foxglove"
-LEVEL_CONFIG["3"]="foxglove livox mvs"
+LEVEL_CONFIG["3"]="foxglove livox mvs fast_livo"
 
 # 保存PID
 declare -A PIDS

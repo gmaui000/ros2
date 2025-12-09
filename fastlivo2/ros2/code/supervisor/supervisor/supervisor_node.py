@@ -52,11 +52,13 @@ class SupervisorNode(Node):
         self.declare_parameter('config_file', '')
         
         # Node enable/disable override parameters (higher priority than config file)
-        self.declare_parameter('fast_livo_enabled', '')
-        self.declare_parameter('foxglove_enabled', '')
-        self.declare_parameter('livox_enabled', '')
-        self.declare_parameter('mvs_enabled', '')
-        self.declare_parameter('calibration_enabled', '')
+        # Use boolean parameters with None as default (None means use config file)
+        self.declare_parameter('fast_livo_enabled', None)
+        self.declare_parameter('foxglove_enabled', None)
+        self.declare_parameter('livox_enabled', None)
+        self.declare_parameter('mvs_enabled', None)
+        self.declare_parameter('calibration_enabled', None)
+        self.declare_parameter('livox2pc_enabled', None)
         
         # Load configuration
         self.config_file = self.get_parameter('config_file').value
@@ -145,26 +147,22 @@ class SupervisorNode(Node):
         """Load node configurations from config with parameter overrides."""
         nodes_config = self.config.get('nodes', {})
         
-        # Get parameter overrides
+        # Get parameter overrides (now boolean or None)
         fast_livo_enabled_param = self.get_parameter('fast_livo_enabled').value
         foxglove_enabled_param = self.get_parameter('foxglove_enabled').value
         livox_enabled_param = self.get_parameter('livox_enabled').value
         mvs_enabled_param = self.get_parameter('mvs_enabled').value
         calibration_enabled_param = self.get_parameter('calibration_enabled').value
+        livox2pc_enabled_param = self.get_parameter('livox2pc_enabled').value
         
         # Helper function to parse parameter value
         def parse_param_value(param_value, default_enabled):
-            """Parse parameter value: empty string means use config, 'true'/'false' override."""
-            if param_value == '':
+            """Parse parameter value: None means use config, True/False override."""
+            if param_value is None:
                 return default_enabled  # Use config value
-            param_value_lower = param_value.lower()
-            if param_value_lower in ['true', '1', 'yes', 'on']:
-                return True
-            elif param_value_lower in ['false', '0', 'no', 'off']:
-                return False
             else:
-                self.get_logger().warn(f"Invalid parameter value '{param_value}', using config value")
-                return default_enabled
+                # param_value is already a boolean (True/False)
+                return param_value
         
         # Process each node configuration
         for name, config in nodes_config.items():
@@ -182,6 +180,8 @@ class SupervisorNode(Node):
                 final_enabled = parse_param_value(mvs_enabled_param, default_enabled)
             elif name == 'calibration':
                 final_enabled = parse_param_value(calibration_enabled_param, default_enabled)
+            elif name == 'livox2pc':
+                final_enabled = parse_param_value(livox2pc_enabled_param, default_enabled)
             
             # Always create node config, even if disabled (allows manual start via command)
             node_config = NodeConfig(

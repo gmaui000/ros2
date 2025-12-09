@@ -61,19 +61,31 @@ recording:
 
 ```bash
 # 启用 fast_livo（覆盖配置文件的 false 设置）
-ros2 launch supervisor supervisor.launch.py fast_livo_enabled:=true
+ros2 launch supervisor supervisor.launch.py fast_livo_enabled:=True
 
 # 禁用 foxglove（覆盖配置文件的 true 设置）
-ros2 launch supervisor supervisor.launch.py foxglove_enabled:=false
+ros2 launch supervisor supervisor.launch.py foxglove_enabled:=False
+
+# 启用 livox2pc 节点
+ros2 launch supervisor supervisor.launch.py livox2pc_enabled:=True
 
 # 同时控制多个节点
 ros2 launch supervisor supervisor.launch.py \
-  fast_livo_enabled:=true \
-  livox_enabled:=true \
-  mvs_enabled:=false
+  fast_livo_enabled:=True \
+  livox_enabled:=True \
+  mvs_enabled:=False \
+  livox2pc_enabled:=True
 ```
 
-**参数值**：`''`（使用配置）、`'true'`/`'1'`/`'yes'`/`'on'`（启用）、`'false'`/`'0'`/`'no'`/`'off'`（禁用）
+**参数值**：`True`（启用）、`False`（禁用）、不提供参数（使用配置文件设置）
+
+**支持的参数**：
+- `fast_livo_enabled`
+- `foxglove_enabled`
+- `livox_enabled`
+- `mvs_enabled`
+- `calibration_enabled`
+- `livox2pc_enabled`
 
 ## 命令控制
 
