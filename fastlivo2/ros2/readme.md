@@ -278,7 +278,7 @@ timeout 30 ros2 bag record /left_camera/image /livox/imu /livox2pc/lidar
 # 自启动
 
 ```bash
-ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=localhost max_qos_depth:=1 num_threads:=6 send_buffer_limit:=2000000 debug:=true
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=localhost max_qos_depth:=1 num_threads:=4 send_buffer_limit:=2000000 debug:=true
 ros2 launch livox_ros_driver msg_MID360_launch.py
 ros2 launch mvs_ros_driver mvs_camera_trigger.py
 

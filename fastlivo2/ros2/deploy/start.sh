@@ -81,6 +81,7 @@ fi
 
 echo "Starting nodes:${VALID_NODES}"
 
+sleep 5
 # ==================== 节点管理函数 ====================
 # 启动节点，输出到终端 + 日志文件
 start_node() {
