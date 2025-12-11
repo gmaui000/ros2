@@ -267,6 +267,20 @@ ros2 launch mvs_ros_driver   mvs_camera_trigger.py
 
 ros2 topic pub -r 10 /camera_info sensor_msgs/msg/CameraInfo "{header: {frame_id: '/left_camera/image'}, height: 512, width: 640, distortion_model: 'plumb_bob', d: [-0.064706, 0.086212, 0.000207, 0.000288, 0.0], k: [639.470092, 0.0, 332.613927, 0.0, 638.908881, 247.858794, 0.0, 0.0, 1.0], r: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0], p: [631.488159, 0.0, 332.371498, 0.0, 0.0, 632.378540, 247.341559, 0.0, 0.0, 0.0, 1.0, 0.0]}" 
 
+
+{
+  "header": {
+    "frame_id": "/left_camera/image"
+  },
+  "height": 512,
+  "width": 640,
+  "distortion_model": "plumb_bob",
+  "d": [-0.064706, 0.086212, 0.000207, 0.000288, 0.0],
+  "k": [639.470092, 0.0, 332.613927, 0.0, 638.908881, 247.858794, 0.0, 0.0, 1.0],
+  "r": [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+  "p": [631.488159, 0.0, 332.371498, 0.0, 0.0, 632.378540, 247.341559, 0.0, 0.0, 0.0, 1.0, 0.0]
+}
+
 timeout 30 ros2 bag record /left_camera/image /livox/imu /livox2pc/lidar
 
   ## direct标定
